@@ -1,0 +1,33 @@
+{
+  "name": "express-backend",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc --build"
+  },
+  "type": "commonjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@clerk/express": "^1.7.1",
+    "@prisma/client": "^6.10.1",
+    "@types/cors": "^2.8.19",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "cron": "^4.3.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
