@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String  @id // ID coming from clerk
+  name               String?
+  email              String
+  onboardingComplete Boolean @default(false)
+
+  macros      Macros[]
+  steps       Steps[]
+  weightTrack Weight[]
+  UserStats   UserStats[]
+  Targets     Targets[]
+}
+
+model UserStats {
+  id           String       @id @unique @default(cuid())
+  height       Int
+  weight       Int
+  maintainance Int
+  activity     ActivityType
+  user         User         @relation(fields: [userId], references: [id])
+  userId       String       @unique
+}
+
+model Targets {
+  id       String @id @unique @default(cuid())
+  calories Int
+  protien  Int
+  carbs    Int
+  fat      Int
+  steps    Int
+  weight   Int
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @unique
+}
+
+model Macros {
+  id       String   @id @default(cuid())
+  date     DateTime
+  calories Int
+  protien  Int
+  carbs    Int
+  fat      Int
+  type     MealType
+  name     String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Steps {
+  id    String   @id @default(cuid())
+  date  DateTime
+  steps Int?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Weight {
+  id     String   @id @default(cuid())
+  date   DateTime
+  weight Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum ActivityType {
+  LIGHT
+  MODERATE
+  HEAVY
+  EXTREME
+}
