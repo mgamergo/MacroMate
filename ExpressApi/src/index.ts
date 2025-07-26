@@ -35,17 +35,27 @@ app.get("/api/health", (req: Request, res: Response) => {
     res.status(200).json({status: "OK Fine"});
 })
 
+// Clerk Webhooks
+app.use('/api/clerk', clerkWebhooksRouter)
+
 // Clerk protected routes
 app.use(requireAuth())
 
 // Routers
-app.use('/api/clerk', clerkWebhooksRouter)
 app.use("/api/macros", macrosRouter);
 app.use("/api/steps", stepsRouter);
 app.use("/api/weight", weightRouter);
 app.use('/api/stats', statsRouter);
 app.use('/api/targets', targetsRouter);
 app.use('/api/user', userRouter);
+
+// app.use((err: any, req: Request, res: Response, next: any) => {
+//     if (err.name === 'ClerkExpressRequireAuthError') {
+//         console.error("Clerk Express Auth Error:", err.message);
+//         return res.status(401).json({ error: 'Unauthorized' });
+//     }
+//     next(err);
+// });
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
