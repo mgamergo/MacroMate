@@ -6,6 +6,7 @@ import AuthenticatedLayout from "@/components/AuthenticatedLayout.tsx";
 import {Toaster} from "react-hot-toast";
 import {useStore} from "@/store/store.ts";
 import StepTrackingWidget from "@/components/StepTrackingWidget.tsx";
+import Test from './components/Test';
 
 
 export default function App() {
@@ -22,7 +23,7 @@ export default function App() {
                         <RequireAuth>
                             <AuthenticatedLayout />
                         </RequireAuth>}>
-                        <Route index element={<StepTrackingWidget />} />
+                        <Route index element={<StepTrackingWidget/>} />
                 </Route>
             </Routes>
 

@@ -22,6 +22,7 @@ import {deleteMeal} from "@/lib/api-calling-methods/mealBackendMethods.ts";
 import {useState} from "react";
 import toast from "react-hot-toast";
 import LogMealForm from "@/components/LogMealForm.tsx";
+import { useAuth } from "@clerk/clerk-react";
 
 export const description = "Macros Widget"
 
@@ -62,7 +63,7 @@ function MealData({macro}: MealDataProps) {
     const { mutateAsync } = useMutation<
         unknown,
         Error,
-        string
+        { id: string; token: string }
     >({
         mutationFn: deleteMeal,
         onSuccess: () => {
@@ -75,8 +76,12 @@ function MealData({macro}: MealDataProps) {
         },
     });
 
-    const handleDelete = (id: MealId) => {
-        mutateAsync(id)
+    const handleDelete = async (id: MealId) => {
+        const {getToken} = useAuth();
+        const token = await getToken();
+        if (token) {
+            mutateAsync({id, token});
+        }
     }
 
     return (

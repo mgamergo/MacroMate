@@ -3,9 +3,13 @@ import type {StepType} from "@/lib/types/steps.type.ts";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const getStepsData = async (): Promise<StepType> => {
+export const getStepsData = async (token: string): Promise<StepType> => {
     const response = await axios.get<StepType[]>(`${BACKEND_URL}/api/steps/today`, {
-        withCredentials: true
+        withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
     });
     const stepsData = response.data;
     const consolidatedSteps: StepType = {
@@ -34,9 +38,13 @@ export const getStepsData = async (): Promise<StepType> => {
     return consolidatedSteps;
 };
 
-export const postStepsData = async (data : { steps: number }) => {
+export const postStepsData = async (data: { steps: number, token: string } ) => {
+    const {token} = data;
     const response = await axios.post(`${BACKEND_URL}/api/steps/`, data, {
-        withCredentials: true
+        withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
     return response.data;
 }
