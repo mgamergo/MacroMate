@@ -1,27 +1,34 @@
-import {useQuery} from "@tanstack/react-query";
-import { getMealData} from "@/lib/api-calling-methods/mealBackendMethods.ts";
-import {type DailyMacroData} from "@/lib/types/meal.type.ts"
+import { useQuery } from "@tanstack/react-query";
+import { getMealData } from "@/lib/api-calling-methods/mealBackendMethods.ts";
+import { type DailyMacroData } from "@/lib/types/meal.type.ts";
 import { useAuth } from "@clerk/clerk-react";
 
 export default function useGetTodaysMacros() {
-    
-    const {data, error, isLoading} = useQuery<DailyMacroData[], Error>({
-        queryKey: ["todayMacros"],
-        queryFn: async () => {
-            const {getToken} = useAuth();
-            const token = await getToken();
-            if (!token) {
-                return [];
-            }
-            return getMealData(token);
-        },
-    })
+  const { getToken, isLoaded, isSignedIn } = useAuth();
 
-    if (error) {
-        console.error("error occurred while fetching", error);
-    }
+  const {
+    data,
+    error,
+    isLoading,
+  } = useQuery<DailyMacroData[], Error>({
+    queryKey: ["todayMacros"],
+    queryFn: async () => {
+      const token = await getToken();
 
-    const macrosData = data ?? ([] as DailyMacroData[]);
+      if (!token) {
+        throw new Error("Authentication token not available.");
+      }
+      return getMealData(token);
+    },
+    enabled: isLoaded && isSignedIn,
+    staleTime: 5 * 60 * 1000,
+  });
 
-    return {macrosData, isLoading}
+  if (error) {
+    console.error("error occurred while fetching", error);
+  }
+
+  const macrosData = data ?? ([] as DailyMacroData[]);
+
+  return { macrosData, isLoading };
 }

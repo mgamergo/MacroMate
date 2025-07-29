@@ -43,17 +43,12 @@ export default function StepTrackingWidget() {
         throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
-      const stepsDataArray: StepType[] = await response.json(); // Expecting an array
-
-      // Consolidate steps: Sum all 'steps' from the array
-      // If your backend always returns a single object for "today's steps",
-      // then this consolidation might be unnecessary, and you can just return stepsDataArray[0]
-      // or handle it based on your actual API response structure.
+      const stepsDataArray: StepType[] = await response.json();
       const consolidatedSteps: StepType = {
-        id: "", // You might want to generate a new ID or decide if this field is relevant for a consolidated entry
+        id: "",
         steps: 0,
-        date: new Date(), // Use current date or the date from the first item if consistent
-        userId: "", // Get user ID from the first item if consistent
+        date: new Date(),
+        userId: "", 
       };
 
       if (stepsDataArray && stepsDataArray.length > 0) {
@@ -61,24 +56,18 @@ export default function StepTrackingWidget() {
           (sum, item) => sum + (item.steps ?? 0),
           0,
         );
-        // Assuming id, date, and userId are consistent across entries for the day,
-        // or you pick them from the first entry.
         consolidatedSteps.id = stepsDataArray[0].id;
-        consolidatedSteps.date = new Date(stepsDataArray[0].date); // Ensure date is parsed correctly
+        consolidatedSteps.date = new Date(stepsDataArray[0].date); 
         consolidatedSteps.userId = stepsDataArray[0].userId;
       } else {
-        // If no steps data for today, return a default StepType
-        // The current date can be set here or by the server.
-        // It's crucial that `steps` is 0 in this case.
         consolidatedSteps.steps = 0;
-        consolidatedSteps.date = new Date(); // Or whatever default date makes sense
+        consolidatedSteps.date = new Date();
       }
 
       return consolidatedSteps;
     },
     enabled: isLoaded && isSignedIn,
-    // Add staleTime to prevent refetching on every re-render unless data is stale
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   // Progress Bar Calculation

@@ -59,29 +59,32 @@ function MealData({macro}: MealDataProps) {
     const [showDeleteMenu, setShowDeleteMenu] = useState(false);
     const [openEditForm, setOpenEditForm] = useState(false);
     const queryClient = useQueryClient();
+    const {getToken} = useAuth();
 
     const { mutateAsync } = useMutation<
         unknown,
         Error,
-        { id: string; token: string }
+        string
     >({
-        mutationFn: deleteMeal,
+        mutationFn: async (id: string) => {
+            const token = await getToken();
+            if (!token) {
+                throw new Error("Not Authenticated");
+            }
+            return deleteMeal({id, token})
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["todayMacros"] });
             toast.success("Meal deleted successfully!")
         },
-        onError: (error) => {
+        onError: (error) => {   
             console.error("Error deleting item:", error);
             toast.error("Unable to delete meal!")
         },
     });
 
     const handleDelete = async (id: MealId) => {
-        const {getToken} = useAuth();
-        const token = await getToken();
-        if (token) {
-            mutateAsync({id, token});
-        }
+        mutateAsync(id);
     }
 
     return (
@@ -193,7 +196,7 @@ export function DailyMacrosWidget() {
 
 
     return (
-        <div className="flex flex-col md:flex-row justify-center border border-border bg-card rounded-xl p-6 max-h-[400px] md:max-h-full">
+        <div className="flex flex-col md:flex-row justify-center border border-border bg-card rounded-xl p-6 max-h-[400px]">
             <Card className="flex flex-1 flex-col bg-card border-border max-h-fit">
                 <CardContent className="flex-1 pb-0">
                     <ChartContainer
@@ -250,7 +253,7 @@ export function DailyMacrosWidget() {
                         <Button variant="ghost" onClick={() => setShowMealsMenu(false)} className="absolute top-3 right-1 text-4xl rotate-45">+</Button>
                     </div>
             </div>}
-            <div className="flex-1 w-full mt-4 md:mt-0 md:ml-4 overflow-y-auto">
+            <div className="flex-1 w-full mt-4 md:mt-0 md:ml-4 overflow-y-auto mb-4">
                 {isLoading ? (
                     <div className="text-white h-full w-full flex justify-center items-center">
                         <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">Loading Meals...</h2>

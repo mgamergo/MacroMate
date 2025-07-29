@@ -1,7 +1,7 @@
 import {Routes, Route} from 'react-router-dom'
 import AuthPage from "@/pages/Authentication.tsx";
 import RequireAuth from "@/components/RequireAuth.tsx";
-// import {DailyMacrosWidget} from "@/components/DailyMacrosWidget.tsx";
+import {DailyMacrosWidget} from "@/components/DailyMacrosWidget.tsx";
 import AuthenticatedLayout from "@/components/AuthenticatedLayout.tsx";
 import {Toaster} from "react-hot-toast";
 import {useStore} from "@/store/store.ts";
@@ -23,7 +23,7 @@ export default function App() {
                         <RequireAuth>
                             <AuthenticatedLayout />
                         </RequireAuth>}>
-                        <Route index element={<StepTrackingWidget/>} />
+                        <Route index element={<DailyMacrosWidget/>} />
                 </Route>
             </Routes>
 
