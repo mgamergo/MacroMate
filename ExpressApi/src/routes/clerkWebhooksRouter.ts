@@ -1,8 +1,8 @@
 import {Router} from "express";
-import { onboardUser } from "../handlers/userHandler";
+import { createUserInDb } from "../handlers/clerkHandler";
 
 const router = Router();
 
-router.post('/', onboardUser )
+router.post('/', createUserInDb as any )
 
 export default router;
