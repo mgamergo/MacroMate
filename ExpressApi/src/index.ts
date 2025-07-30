@@ -15,6 +15,8 @@ dotenv.config();
 
 const app = express();
 
+app.use('/api/clerk', clerkWebhooksRouter, bodyParser.raw({type: "application/json",}));
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -38,7 +40,6 @@ app.get("/api/health", (req: Request, res: Response) => {
     res.status(200).json({status: "OK Fine"});
 });
 
-app.use('/api/clerk', clerkWebhooksRouter, bodyParser.raw({type: "application/json",}));
 app.use(requireAuth());
 app.use("/api/macros", macrosRouter);
 app.use("/api/steps", stepsRouter);
