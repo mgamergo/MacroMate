@@ -9,6 +9,7 @@ const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 dotenv.config();
 export const onboardUser = async (req: Request, res: Response) => {
+  console.log("I am running")
    const svix_id = Array.isArray(req.headers["svix-id"])
     ? req.headers["svix-id"][0]
     : req.headers["svix-id"];
